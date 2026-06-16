@@ -1,0 +1,41 @@
+server:
+  port: 8021
+
+app:
+  skills:
+    path: mcp-server/.opencode/skills
+
+
+spring:
+  application:
+    name: springai-mcp-server
+  config:
+    import: optional:file:./local-test.properties,optional:file:../local-test.properties
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 40MB
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        api-key: ${OPENAI_EMBEDDING_API_KEY:${OPENAI_API_KEY}}
+        options:
+          model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
+    mcp:
+      server:
+        name: mcp-server
+        version: 1.0.0
+        sse-message-endpoint: /mcp/message # 这是接收客户端 POST 消息的端点
+        # 可选配置
+        enabled: true
+        # 可选：标准输入输出传输（用于本地集成）
+#        transport: stdio
+
+
+# 日志配置（方便调试）
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    io.modelcontextprotocol: DEBUG
